@@ -9,6 +9,7 @@
   "author": "Shashank Sahu",
   "license": "MIT",
   "dependencies": {
-    "socket.io": "^4.0.1"
+    "nodemon": "^2.0.7",
+    "socket.io": "^1.7.4"
   }
 }

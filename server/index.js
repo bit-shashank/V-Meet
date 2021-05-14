@@ -1,3 +1,4 @@
+const util = require('util');
 const io = require("socket.io")(3000);
 
 io.on("connection", (socket) => {
@@ -5,18 +6,26 @@ io.on("connection", (socket) => {
 
 	socket.emit("setId", { id: socket.id });
 
+	console.log(`Client Connected ${socket.id}`);
+
+
 	socket.on("disconnect", () => {
 		console.log("Player disconnected");
 		socket.broadcast.emit("deletePlayer", { id: socket.id });
 	});
 
 	socket.on("init", (data) => {
-		console.log(data);
-		socket.userData = data;
+		socket.userData .x=0;
+		socket.userData.y=0;
+		socket.userData.z=0;
+		console.log("Init:"+data);
 	});
 
 	socket.on("update", (data) => {
-		console.log("Update:" + data);
+		console.log("Here.");
+		console.log(util.inspect(data, {showHidden: false, depth: null}));
+		// x,y,z=data.split(",");
+
 	});
 });
 
@@ -27,9 +36,13 @@ setInterval(() => {
 	for (let id in io.sockets.sockets) {
 		let socket = nsp.connected[id];
 		if (socket.userData !== undefined) {
-			pack.push(socket.userData);
+			let pos= userData.x+","+userData.y+","+userData.z;
+			pack.push(pos);
 		}
 	}
-
-	if (pack.length > 0) io.sockets.emit("remoteData", pack);
+	
+	if (pack.length > 0){
+		// console.log(pack);
+		 io.sockets.emit("remoteData", pack);
+	}
 }, 40);
